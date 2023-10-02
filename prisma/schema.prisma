@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model EmailChange {
+  token      String   @id @db.Char(250)
+  newEmail   String
+  userId     String   @unique @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  validUntil DateTime @default(dbgenerated("(timezone('utc'::text, now()) + '1 day'::interval)")) @db.Timestamp(6)
+
+  @@map("email-change")
+}
+
+model EmailVerification {
+  token      String   @id @db.Char(250)
+  userId     String   @unique @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  validUntil DateTime @default(dbgenerated("(timezone('utc'::text, now()) + '1 day'::interval)")) @db.Timestamp(6)
+
+  @@map("email-verification")
+}
+
+model PasswordReset {
+  token      String   @id @db.Char(250)
+  userId     String   @unique @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  validUntil DateTime @default(dbgenerated("(timezone('utc'::text, now()) + '1 day'::interval)")) @db.Timestamp(6)
+
+  @@map("password-reset")
+}
+
+model User {
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username          String             @unique
+  email             String             @unique
+  password          String
+  firstName         String
+  lastName          String
+  middleName        String?
+  avatar            String?
+  status            AccountStatus      @default(pending)
+  emailVerified     Boolean            @default(false)
+  birthDate         DateTime?          @db.Date
+  createdAt         DateTime           @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  updatedAt         DateTime           @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  deletedAt         DateTime?
+  emailChange       EmailChange?
+  emailVerification EmailVerification?
+  passwordReset     PasswordReset?
+
+  @@map("user")
+}
+
+enum AccountStatus {
+  pending
+  confirmed
+  compromised
+}
