@@ -24,14 +24,12 @@ export class UserResponse {
   static fromUserEntity(entity: User): UserResponse {
     const response = new UserResponse();
     response.id = entity.id;
-    response.username = entity.username;
     response.email = entity.email;
     response.emailVerified = entity.emailVerified;
     response.name = [entity.firstName, entity.middleName, entity.lastName]
       .filter((s) => s !== null)
       .join(' ');
     response.avatar = entity.avatar;
-    response.birthDate = entity.birthDate;
     response.createdAt = entity.createdAt;
     response.updatedAt = entity.updatedAt;
     response.status = entity.status;

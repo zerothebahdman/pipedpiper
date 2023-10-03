@@ -18,17 +18,6 @@ export class SignupRequest {
   email: string;
 
   @ApiProperty({
-    description: 'User Username',
-    required: true,
-  })
-  @IsNotEmpty()
-  // alphanumeric characters and - are valid
-  // you can change this as you like
-  @Matches(RegExp('^[a-zA-Z0-9\\-]+$'))
-  @MaxLength(20)
-  username: string;
-
-  @ApiProperty({
     description: 'User Password',
     required: true,
   })

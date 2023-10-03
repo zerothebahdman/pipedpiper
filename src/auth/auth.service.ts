@@ -34,7 +34,6 @@ export class AuthService {
     try {
       const user = await this.prisma.user.create({
         data: {
-          username: signupRequest.username.toLowerCase(),
           email: signupRequest.email.toLowerCase(),
           password: await bcrypt.hash(signupRequest.password, 14),
           firstName: signupRequest.firstName,
@@ -207,11 +206,7 @@ export class AuthService {
       where: { id: payload.id },
     });
 
-    if (
-      user !== null &&
-      user.email === payload.email &&
-      user.username === payload.username
-    ) {
+    if (user !== null && user.email === payload.email) {
       return user;
     }
     throw new UnauthorizedException();
@@ -223,9 +218,6 @@ export class AuthService {
       where: {
         OR: [
           {
-            username: normalizedIdentifier,
-          },
-          {
             email: normalizedIdentifier,
           },
         ],
@@ -234,7 +226,6 @@ export class AuthService {
         id: true,
         password: true,
         email: true,
-        username: true,
       },
     });
 
@@ -248,18 +239,9 @@ export class AuthService {
     const payload: JwtPayload = {
       id: user.id,
       email: user.email,
-      username: user.username,
     };
 
     return this.jwtService.signAsync(payload);
-  }
-
-  async isUsernameAvailable(username: string): Promise<boolean> {
-    const user = await this.prisma.user.findUnique({
-      where: { username: username.toLowerCase() },
-      select: { username: true },
-    });
-    return user === null;
   }
 
   async isEmailAvailable(email: string): Promise<boolean> {

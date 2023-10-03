@@ -13,15 +13,6 @@ export class UserService {
     });
   }
 
-  public async getUserEntityByUsername(
-    username: string,
-  ): Promise<AuthUser | null> {
-    const normalizedUsername = username.toLowerCase();
-    return this.prisma.user.findUnique({
-      where: { username: normalizedUsername },
-    });
-  }
-
   async updateUser(
     userId: string,
     updateRequest: UpdateUserRequest,
@@ -31,11 +22,6 @@ export class UserService {
         where: { id: userId },
         data: {
           ...updateRequest,
-          birthDate:
-            updateRequest.birthDate !== null &&
-            updateRequest.birthDate !== undefined
-              ? new Date(updateRequest.birthDate)
-              : updateRequest.birthDate,
         },
       });
 

@@ -44,18 +44,6 @@ export class AuthController {
     private readonly emailService: EmailService,
   ) {}
 
-  @ApiOperation({ summary: 'Check username validity' })
-  @Post('check-username')
-  @HttpCode(HttpStatus.OK)
-  async checkUsernameAvailability(
-    @Body() checkUsernameRequest: CheckUsernameRequest,
-  ): Promise<CheckUsernameResponse> {
-    const isAvailable = await this.authService.isUsernameAvailable(
-      checkUsernameRequest.username,
-    );
-    return new CheckUsernameResponse(isAvailable);
-  }
-
   @Post('check-email')
   @HttpCode(HttpStatus.OK)
   async checkEmailAvailability(
