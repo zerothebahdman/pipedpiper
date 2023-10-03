@@ -37,7 +37,6 @@ model PasswordReset {
 
 model User {
   id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username          String             @unique
   email             String             @unique
   password          String
   firstName         String
@@ -46,7 +45,6 @@ model User {
   avatar            String?
   status            AccountStatus      @default(pending)
   emailVerified     Boolean            @default(false)
-  birthDate         DateTime?          @db.Date
   createdAt         DateTime           @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
   updatedAt         DateTime           @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
   deletedAt         DateTime?
@@ -55,6 +53,17 @@ model User {
   passwordReset     PasswordReset?
 
   @@map("user")
+}
+
+model Company {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  usersCount    Int
+  productsCount Int
+  percentage    Float
+  createdAt     DateTime  @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  updatedAt     DateTime  @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  deletedAt     DateTime?
 }
 
 enum AccountStatus {
