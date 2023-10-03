@@ -20,7 +20,7 @@ import {
 } from './dtos';
 import { AuthUser } from './auth-user';
 import { PrismaService } from '../common/services/prisma.service';
-import { UserResponse } from 'src/user/models';
+import { UserAccountResponse } from './dtos/response/user.response.dto';
 
 @Injectable()
 export class AuthService {
@@ -161,7 +161,7 @@ export class AuthService {
   }
 
   async initiateResetPassword(
-    user: UserResponse,
+    user: UserAccountResponse,
     token: string,
   ): Promise<void> {
     const deletePrevPasswordResetIfExist = this.prisma.passwordReset.deleteMany(
@@ -212,7 +212,7 @@ export class AuthService {
     throw new UnauthorizedException();
   }
 
-  async login(loginRequest: LoginRequest): Promise<string> {
+  async login(loginRequest: LoginRequest) {
     const normalizedIdentifier = loginRequest.identifier.toLowerCase();
     const user = await this.prisma.user.findFirst({
       where: {
@@ -221,11 +221,6 @@ export class AuthService {
             email: normalizedIdentifier,
           },
         ],
-      },
-      select: {
-        id: true,
-        password: true,
-        email: true,
       },
     });
 
@@ -241,7 +236,8 @@ export class AuthService {
       email: user.email,
     };
 
-    return this.jwtService.signAsync(payload);
+    const token = await this.jwtService.signAsync(payload);
+    return { user, access_token: token };
   }
 
   async isEmailAvailable(email: string): Promise<boolean> {

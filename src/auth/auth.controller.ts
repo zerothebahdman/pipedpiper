@@ -6,33 +6,25 @@ import {
   HttpStatus,
   Post,
   Query,
-  UseGuards,
+  Res,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { Usr } from '../user/user.decorator';
 import {
   CheckEmailRequest,
   CheckEmailResponse,
-  CheckUsernameRequest,
-  CheckUsernameResponse,
   LoginRequest,
   LoginResponse,
   ResetPasswordRequest,
   SignupRequest,
 } from './dtos';
-import { UserResponse } from '../user/models';
-import { AuthUser } from './auth-user';
 import { UserService } from '../user/user.service';
 import { HelperClass } from 'src/utils/helpers';
 import { EmailService } from 'src/mail-sender/mail-sender.service';
 import { AccountStatus } from '@prisma/client';
+import { UserAccountResponse } from './dtos/response/user.response.dto';
+import { Response } from 'express';
+import { SUCCESS_MESSAGES } from 'src/constant/success-message';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -54,36 +46,60 @@ export class AuthController {
     );
     return new CheckEmailResponse(isAvailable);
   }
+
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'User created successfully',
-    type: UserResponse,
+    type: UserAccountResponse,
   })
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  async signup(@Body() signupRequest: SignupRequest): Promise<void> {
+  async signup(@Body() signupRequest: SignupRequest) {
     const token = this.helperClass.generateRandomString(6, 'num');
     const hashToken = await this.helperClass.hashString(token);
-    await this.authService.signup(signupRequest, hashToken);
+    const data = await this.authService.signup(signupRequest, hashToken);
     await this.emailService.sendVerifyEmailMail(
       signupRequest.firstName,
       signupRequest.email,
       token,
     );
+    return {
+      status: HttpStatus.CREATED,
+      message: 'User created successfully',
+      data: UserAccountResponse.fromUserAccountEntity(data),
+    };
   }
 
   @Post('login')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: SUCCESS_MESSAGES.LOGIN_SUCCESS,
+    type: LoginResponse,
+  })
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginRequest: LoginRequest): Promise<LoginResponse> {
-    return new LoginResponse(await this.authService.login(loginRequest));
-  }
+  async login(@Body() loginRequest: LoginRequest, @Res() res: Response) {
+    try {
+      const { access_token, user } = await this.authService.login(loginRequest);
 
-  @ApiBearerAuth()
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard())
-  async getUserWithToken(@Usr() user: AuthUser): Promise<UserResponse> {
-    return UserResponse.fromUserEntity(user);
+      // for security reasons, we will not send the access token in the response body, we will send it as a cookie instead and set the cookie as httpOnly
+      res.cookie('__pipedpiper__', access_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      });
+
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
+        data: UserAccountResponse.fromUserAccountEntity(user),
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Login failed',
+        error: error.message,
+      });
+    }
   }
 
   @Get('verify')
@@ -111,7 +127,11 @@ export class AuthController {
     const token = this.helperClass.generateRandomString(6, 'num');
     const hashToken = await this.helperClass.hashString(token);
     await this.authService.initiateResetPassword(user, hashToken);
-    await this.emailService.sendResetPasswordMail(user.name, user.email, token);
+    await this.emailService.sendResetPasswordMail(
+      `${user.firstName} ${user.lastName}`,
+      user.email,
+      token,
+    );
   }
 
   @Post('reset-password')
@@ -133,6 +153,10 @@ export class AuthController {
     const token = this.helperClass.generateRandomString(6, 'num');
     const hashToken = await this.helperClass.hashString(token);
     await this.authService.resendVerificationMail(user.id, hashToken);
-    await this.emailService.sendVerifyEmailMail(user.name, user.email, token);
+    await this.emailService.sendVerifyEmailMail(
+      `${user.firstName} ${user.lastName}`,
+      user.email,
+      token,
+    );
   }
 }
