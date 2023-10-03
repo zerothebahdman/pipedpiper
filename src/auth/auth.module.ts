@@ -5,11 +5,11 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import config from '../config';
-import { JwtStrategy } from './jwt.strategy';
 import { MailSenderModule } from '../mail-sender/mail-sender.module';
 import { PrismaService } from '../common/services/prisma.service';
 import { HelperClass } from 'src/utils/helpers';
 import apiGatewayConfig from 'config/api-gateway.config';
+import { JwtStrategy } from 'src/security/jwt.strategy';
 
 @Module({
   imports: [

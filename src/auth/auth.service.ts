@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { AccountStatus, Prisma } from '@prisma/client';
 import { UserService } from '../user/user.service';
-import { JwtPayload } from './jwt-payload';
+import { JwtPayload } from '../security/jwt-payload';
 import {
   ChangeEmailRequest,
   LoginRequest,

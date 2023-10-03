@@ -5,8 +5,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MailSenderModule } from './mail-sender/mail-sender.module';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
-import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
+import { CompanyOnboardingModule } from './company-onboarding/company-onboarding.module';
 import config from 'config/api-gateway.config';
 
 @Module({
@@ -23,6 +23,7 @@ import config from 'config/api-gateway.config';
     UserModule,
     AuthModule,
     MailSenderModule,
+    CompanyOnboardingModule,
   ],
   providers: [
     {
@@ -30,6 +31,5 @@ import config from 'config/api-gateway.config';
       useClass: ThrottlerBehindProxyGuard,
     },
   ],
-  controllers: [AppController],
 })
 export class AppModule {}

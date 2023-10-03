@@ -8,7 +8,7 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import {
   CheckEmailRequest,
@@ -102,10 +102,20 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({ summary: 'Verify email' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: SUCCESS_MESSAGES.EMAIL_VERIFIED,
+    // type: EmailVerifiedResponse,
+  })
   @Get('verify')
-  @HttpCode(HttpStatus.OK)
-  async verifyMail(@Query('token') token: string): Promise<void> {
-    await this.authService.verifyEmail(token);
+  async verifyMail(@Query('token') token: string) {
+    const hashToken = await this.helperClass.hashString(token);
+    await this.authService.verifyEmail(hashToken);
+    return {
+      statusCode: HttpStatus.OK,
+      message: SUCCESS_MESSAGES.EMAIL_VERIFIED,
+    };
   }
 
   @Get('change-email')

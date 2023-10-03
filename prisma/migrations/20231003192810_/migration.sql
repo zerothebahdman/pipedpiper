@@ -57,6 +57,7 @@ CREATE TABLE "company" (
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT timezone('UTC'::text, now()),
     "updatedAt" TIMESTAMP(6) NOT NULL DEFAULT timezone('UTC'::text, now()),
     "deletedAt" TIMESTAMP(3),
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "company_pkey" PRIMARY KEY ("id")
 );
@@ -73,6 +74,9 @@ CREATE UNIQUE INDEX "password-reset_userId_key" ON "password-reset"("userId");
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "company_userId_key" ON "company"("userId");
+
 -- AddForeignKey
 ALTER TABLE "email-change" ADD CONSTRAINT "email-change_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -81,3 +85,6 @@ ALTER TABLE "email-verification" ADD CONSTRAINT "email-verification_userId_fkey"
 
 -- AddForeignKey
 ALTER TABLE "password-reset" ADD CONSTRAINT "password-reset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "company" ADD CONSTRAINT "company_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE NO ACTION;

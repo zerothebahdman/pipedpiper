@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import * as requestIp from 'request-ip';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   // CORS is enabled
@@ -15,6 +16,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   app.use(requestIp.mw());
+  app.use(cookieParser(config.getOrThrow<string>('jwt_secret')));
 
   // Helmet Middleware against known security vulnerabilities
   app.use(helmet());

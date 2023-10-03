@@ -28,7 +28,7 @@ describe('UserService', () => {
 
   describe('getUserEntityById', () => {
     it('should call repository with correct id', async () => {
-      const id = 12313242;
+      const id = '12313242';
 
       await service.getUserEntityById(id);
 
@@ -39,37 +39,12 @@ describe('UserService', () => {
     });
 
     it('should return the result from repository', async () => {
-      const userId = 123123;
+      const userId = '123123';
       const user = mockUser({ id: userId });
 
       spyPrismaService.user.findUnique.mockResolvedValue(user);
 
       expect(await service.getUserEntityById(userId)).toStrictEqual(user);
-    });
-  });
-
-  describe('getUserEntityByUsername', () => {
-    it('should call repository with given username', async () => {
-      const username = 'userName';
-
-      await service.getUserEntityByUsername(username);
-
-      expect(spyPrismaService.user.findUnique).toBeCalledTimes(1);
-      expect(spyPrismaService.user.findUnique).toBeCalledWith({
-        where: { username: username.toLowerCase() },
-      });
-    });
-
-    it('should return the result from repository', async () => {
-      const username = 'username';
-
-      const user = mockUser({ username });
-
-      spyPrismaService.user.findUnique.mockResolvedValue(user);
-
-      expect(await service.getUserEntityByUsername(username)).toStrictEqual(
-        user,
-      );
     });
   });
 
