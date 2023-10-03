@@ -3,7 +3,7 @@ CREATE TYPE "AccountStatus" AS ENUM ('pending', 'confirmed', 'compromised');
 
 -- CreateTable
 CREATE TABLE "email-change" (
-    "token" CHAR(21) NOT NULL,
+    "token" CHAR(250) NOT NULL,
     "newEmail" TEXT NOT NULL,
     "userId" UUID NOT NULL,
     "validUntil" TIMESTAMP(6) NOT NULL DEFAULT (timezone('utc'::text, now()) + '1 day'::interval),
@@ -22,7 +22,7 @@ CREATE TABLE "email-verification" (
 
 -- CreateTable
 CREATE TABLE "password-reset" (
-    "token" CHAR(21) NOT NULL,
+    "token" CHAR(250) NOT NULL,
     "userId" UUID NOT NULL,
     "validUntil" TIMESTAMP(6) NOT NULL DEFAULT (timezone('utc'::text, now()) + '1 day'::interval),
 
@@ -32,21 +32,33 @@ CREATE TABLE "password-reset" (
 -- CreateTable
 CREATE TABLE "user" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "middleName" TEXT,
     "avatar" TEXT,
-    "status" "AccountStatus" DEFAULT 'pending',
+    "status" "AccountStatus" NOT NULL DEFAULT 'pending',
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
-    "birthDate" DATE,
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT timezone('UTC'::text, now()),
     "updatedAt" TIMESTAMP(6) NOT NULL DEFAULT timezone('UTC'::text, now()),
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "company" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "name" TEXT NOT NULL,
+    "usersCount" INTEGER NOT NULL,
+    "productsCount" INTEGER NOT NULL,
+    "percentage" DOUBLE PRECISION NOT NULL,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT timezone('UTC'::text, now()),
+    "updatedAt" TIMESTAMP(6) NOT NULL DEFAULT timezone('UTC'::text, now()),
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "company_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -57,9 +69,6 @@ CREATE UNIQUE INDEX "email-verification_userId_key" ON "email-verification"("use
 
 -- CreateIndex
 CREATE UNIQUE INDEX "password-reset_userId_key" ON "password-reset"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "user_username_key" ON "user"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");

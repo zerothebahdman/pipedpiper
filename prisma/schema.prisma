@@ -64,6 +64,8 @@ model Company {
   createdAt     DateTime  @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
   updatedAt     DateTime  @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
   deletedAt     DateTime?
+
+  @@map("company")
 }
 
 enum AccountStatus {
