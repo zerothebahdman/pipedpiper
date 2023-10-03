@@ -21,6 +21,7 @@ export default () => {
       REDIS_URL: Yup.string().required(),
       JWT_ACCESS_TOKEN_EXPIRES: Yup.string().default('1hr'),
       JWT_REFRESH_TOKEN_EXPIRES: Yup.string().default('30d'),
+      JWT_SECRET: Yup.string().required(),
     })
     .unknown();
   let envVars: Yup.InferType<typeof envVarsSchema>;
@@ -52,5 +53,6 @@ export default () => {
     redis_url: envVars.REDIS_URL,
     jwt_access_token_expires: envVars.JWT_ACCESS_TOKEN_EXPIRES,
     jwt_refresh_token_expires: envVars.JWT_REFRESH_TOKEN_EXPIRES,
+    jwt_secret: envVars.JWT_SECRET,
   };
 };

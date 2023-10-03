@@ -9,13 +9,14 @@ import { JwtStrategy } from './jwt.strategy';
 import { MailSenderModule } from '../mail-sender/mail-sender.module';
 import { PrismaService } from '../common/services/prisma.service';
 import { HelperClass } from 'src/utils/helpers';
+import apiGatewayConfig from 'config/api-gateway.config';
 
 @Module({
   imports: [
     UserModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: config.jwt.secretOrKey,
+      secret: apiGatewayConfig().jwt_secret,
       signOptions: {
         expiresIn: config.jwt.expiresIn,
       },

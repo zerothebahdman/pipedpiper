@@ -1,6 +1,8 @@
+import apiGatewayConfig from 'config/api-gateway.config';
+
 export default {
   jwt: {
-    secretOrKey: '__JWT_SECRET_KEY__',
+    secretOrKey: apiGatewayConfig().jwt_secret,
     expiresIn: 86400,
   },
   // You can also use any other email sending services

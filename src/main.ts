@@ -21,8 +21,8 @@ async function bootstrap() {
 
   // Swagger API Documentation
   const options = new DocumentBuilder()
-    .setTitle('NestJS Starter API')
-    .setDescription('A simple NestJS starter API')
+    .setTitle('Pipedpiper')
+    .setDescription('A simple Pipedpiper')
     .setVersion('1.0.0')
     .addBearerAuth()
     .build();
