@@ -43,6 +43,7 @@ CREATE TABLE "user" (
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT timezone('UTC'::text, now()),
     "updatedAt" TIMESTAMP(6) NOT NULL DEFAULT timezone('UTC'::text, now()),
     "deletedAt" TIMESTAMP(3),
+    "rolesId" UUID,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -62,6 +63,18 @@ CREATE TABLE "company" (
     CONSTRAINT "company_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "roles" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "createdAt" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(6),
+    "deletedAt" TIMESTAMPTZ(6),
+
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "email-change_userId_key" ON "email-change"("userId");
 
@@ -77,6 +90,9 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "company_userId_key" ON "company"("userId");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "roles_title_key" ON "roles"("title");
+
 -- AddForeignKey
 ALTER TABLE "email-change" ADD CONSTRAINT "email-change_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -85,6 +101,9 @@ ALTER TABLE "email-verification" ADD CONSTRAINT "email-verification_userId_fkey"
 
 -- AddForeignKey
 ALTER TABLE "password-reset" ADD CONSTRAINT "password-reset_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user" ADD CONSTRAINT "user_rolesId_fkey" FOREIGN KEY ("rolesId") REFERENCES "roles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "company" ADD CONSTRAINT "company_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE NO ACTION;

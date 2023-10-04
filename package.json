@@ -1,12 +1,15 @@
 {
-  "name": "nestjs-prisma-starter",
+  "name": "pipedpiper",
   "version": "0.1.0",
-  "description": "Hackathon starter project for NestJS.",
+  "description": "A simple NesJS Backend API for pipedpiper",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zerothebahdman/nestjs-prisma-starter"
+    "url": "https://github.com/zerothebahdman/pipedpiper"
   },
-  "author": "Ahmet Uysal",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "author": "Okoro Divinewill",
   "license": "MIT",
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
@@ -60,6 +63,7 @@
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "cloudinary": "^1.41.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
     "dotenv-cli": "7.2.1",

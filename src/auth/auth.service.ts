@@ -32,6 +32,10 @@ export class AuthService {
 
   async signup(signupRequest: SignupRequest, token: string) {
     try {
+      const role = await this.prisma.roles.findFirst({
+        where: { title: signupRequest.role || 'user' },
+      });
+      if (!role) throw new BadRequestException('Role not found');
       const user = await this.prisma.user.create({
         data: {
           email: signupRequest.email.toLowerCase(),
@@ -39,6 +43,7 @@ export class AuthService {
           firstName: signupRequest.firstName,
           lastName: signupRequest.lastName,
           middleName: signupRequest.middleName,
+          rolesId: role.id,
           emailVerification: {
             create: {
               token,

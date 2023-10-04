@@ -24,7 +24,7 @@ export class UpdateCompanyOnboardingForm {
     description: 'Number of users',
     required: true,
   })
-  numberOfUsers: number;
+  usersCount: number;
 
   @IsNotEmpty()
   @IsNumber()
@@ -33,13 +33,24 @@ export class UpdateCompanyOnboardingForm {
     description: 'Number of products',
     required: true,
   })
-  numberOfProducts: number;
+  productsCount: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    description: 'Company logo',
+    required: true,
+  })
+  companyLogo: string;
+
+  percentage: number;
 
   static from(form: UpdateCompanyOnboardingForm) {
     const it = new UpdateCompanyOnboardingForm();
     it.name = form.name;
-    it.numberOfUsers = form.numberOfUsers;
-    it.numberOfProducts = form.numberOfProducts;
+    it.usersCount = form.usersCount;
+    it.productsCount = form.productsCount;
 
     return it;
   }

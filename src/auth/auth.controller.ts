@@ -76,6 +76,10 @@ export class AuthController {
     description: SUCCESS_MESSAGES.LOGIN_SUCCESS,
     type: LoginResponse,
   })
+  @ApiOperation({
+    summary:
+      'For security reasons and best practices, we will not send the access token in the response body, we will send it as a cookie instead and set the cookie as httpOnly, so when you can go ahead and make a request to any protected endpoint, the access token will be sent as a cookie in the request header',
+  })
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginRequest: LoginRequest, @Res() res: Response) {
     try {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateCompanyOnboardingRequest } from './dto/request/create-company-onboarding.request';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { PaginationService } from '../common/services/paginate.service';
@@ -12,14 +12,12 @@ export class CompanyOnboardingService {
     private readonly paginationService: PaginationService,
   ) {}
   async create(body: CreateCompanyOnboardingRequest, actor: string) {
-    const percentage = Math.round(
-      (body.numberOfUsers / body.numberOfProducts) * 100,
-    );
+    const percentage = Math.round((body.usersCount / body.productsCount) * 100);
     const data = await this.prisma.company.create({
       data: {
         name: body.name,
-        usersCount: body.numberOfUsers,
-        productsCount: body.numberOfProducts,
+        usersCount: body.usersCount,
+        productsCount: body.productsCount,
         percentage,
         userId: actor,
       },
@@ -69,9 +67,7 @@ export class CompanyOnboardingService {
   update(id: string, body: UpdateCompanyOnboardingForm) {
     const data = this.prisma.company.update({
       where: { id },
-      data: {
-        ...body,
-      },
+      data: body,
     });
     return data;
   }

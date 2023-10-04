@@ -29,6 +29,12 @@ export class UserAccountResponse {
   })
   lastName: string;
 
+  @ApiProperty({
+    description: 'User role',
+    required: false,
+  })
+  role: string | null;
+
   static fromUserAccountEntity(entity: User) {
     const response = new UserAccountResponse();
     response.id = entity.id;
@@ -38,6 +44,7 @@ export class UserAccountResponse {
     response.createdAt = entity.createdAt;
     response.updatedAt = entity.updatedAt;
     response.status = entity.status;
+    response.role = entity.rolesId;
     return response;
   }
 }

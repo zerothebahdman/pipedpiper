@@ -52,6 +52,8 @@ model User {
   emailVerification EmailVerification?
   passwordReset     PasswordReset?
   Company           Company?
+  roles             roles?             @relation(fields: [rolesId], references: [id])
+  rolesId           String?            @db.Uuid
 
   @@map("user")
 }
@@ -62,6 +64,7 @@ model Company {
   usersCount    Int
   productsCount Int
   percentage    Float
+  companyLogo   String?
   createdAt     DateTime  @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
   updatedAt     DateTime  @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
   deletedAt     DateTime?
@@ -69,6 +72,16 @@ model Company {
   userId        String    @unique @db.Uuid
 
   @@map("company")
+}
+
+model roles {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String    @unique
+  description String
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime? @updatedAt @db.Timestamptz(6)
+  deletedAt   DateTime? @db.Timestamptz(6)
+  user        User[]
 }
 
 enum AccountStatus {

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   Matches,
@@ -52,4 +53,16 @@ export class SignupRequest {
   @Matches(RegExp('^[A-Za-zıöüçğşİÖÜÇĞŞñÑáéíóúÁÉÍÓÚ ]+$'))
   @MaxLength(20)
   middleName?: string;
+
+  @ApiProperty({
+    description: 'User Role',
+    required: false,
+    enum: ['admin', 'user'],
+    default: 'user',
+  })
+  @IsOptional()
+  @IsNotEmpty()
+  @MaxLength(20)
+  @IsEnum(['admin', 'user'])
+  role?: string;
 }

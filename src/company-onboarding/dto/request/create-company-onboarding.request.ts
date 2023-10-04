@@ -16,7 +16,7 @@ export class CreateCompanyOnboardingRequest {
     description: 'Number of users',
     required: true,
   })
-  numberOfUsers: number;
+  usersCount: number;
 
   @IsNotEmpty()
   @IsNumber()
@@ -24,13 +24,13 @@ export class CreateCompanyOnboardingRequest {
     description: 'Number of products',
     required: true,
   })
-  numberOfProducts: number;
+  productsCount: number;
 
   static from(form: CreateCompanyOnboardingRequest) {
     const it = new CreateCompanyOnboardingRequest();
     it.name = form.name;
-    it.numberOfUsers = form.numberOfUsers;
-    it.numberOfProducts = form.numberOfProducts;
+    it.usersCount = form.usersCount;
+    it.productsCount = form.productsCount;
 
     return it;
   }
