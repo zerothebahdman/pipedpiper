@@ -2,7 +2,8 @@ import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../common/services/prisma.service';
 import { AuthUser } from '../auth/auth-user';
 import { UpdateUserRequest } from './models';
-import { UserAccountResponse } from 'src/auth/dtos/response/user.response.dto';
+// import { UserAccountResponse } from 'src/auth/dtos/response/user.response.dto';
+import { UserAccountResponse } from '../auth/dtos/response/user.response.dto';
 
 @Injectable()
 export class UserService {
