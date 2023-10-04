@@ -3,7 +3,7 @@ import { createTransport } from 'nodemailer';
 import * as Mail from 'nodemailer/lib/mailer';
 
 // import config from '../config';
-import config from 'config/api-gateway.config';
+import config from '../../config/api-gateway.config';
 import { EMAIL_VERIFICATION, PASSWORD_RESET } from './templates';
 
 @Injectable()
