@@ -34,4 +34,6 @@ COPY --from=development /usr/src/app/dist ./dist
 
 EXPOSE 8080
 
+RUN npx prisma generate
+
 CMD [ "npm", "run", "start:migrate:prod" ]
