@@ -7,7 +7,7 @@ import { MailSenderModule } from './mail-sender/mail-sender.module';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
 import { ConfigModule } from '@nestjs/config';
 import { CompanyOnboardingModule } from './company-onboarding/company-onboarding.module';
-import config from 'config/api-gateway.config';
+import config from '../config/api-gateway.config';
 
 @Module({
   imports: [

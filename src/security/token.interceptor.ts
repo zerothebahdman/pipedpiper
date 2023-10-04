@@ -7,8 +7,8 @@ import {
 import type { Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthUser } from 'src/auth/auth-user';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthUser } from '../auth/auth-user';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class TokenInterceptor implements NestInterceptor {
@@ -27,7 +27,7 @@ export class TokenInterceptor implements NestInterceptor {
         });
 
         response.setHeader('Authorization', `Bearer ${token}`);
-        response.cookie('__bucap__', token, {
+        response.cookie('__pipedpipper__', token, {
           httpOnly: true,
           signed: true,
           sameSite: 'strict',

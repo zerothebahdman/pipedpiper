@@ -1,10 +1,10 @@
 import { ExtractJwt, JwtFromRequestFunction, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtPayload } from './jwt-payload';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from 'src/auth/auth.service';
-import { AuthUser } from 'src/auth/auth-user';
+import { AuthService } from '../auth/auth.service';
+import { AuthUser } from '../auth/auth-user';
 
 const extractJwtFromCookie: JwtFromRequestFunction = (request) => {
   return request.cookies['__pipedpiper__'];
