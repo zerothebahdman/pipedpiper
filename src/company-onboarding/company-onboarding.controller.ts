@@ -130,58 +130,6 @@ export class CompanyOnboardingController {
       data,
     };
   }
-  /**
-   * @description Get all company onboarding, only users with admin role can access this endpoint
-   */
-  @ApiOperation({
-    summary:
-      'This endpoint is used to get all companies and it is only accessible to admins',
-  })
-  @Roles('user')
-  @UseGuards(JWTAuthGuard, RolesGuard)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: SUCCESS_MESSAGES.RECORD_UPDATED,
-    type: CreateCompanyOnboardingResponse,
-  })
-  @HttpCode(HttpStatus.OK)
-  @ApiQuery({
-    name: 'userId',
-    required: false,
-    description: 'Filter companies by user id',
-  })
-  @ApiQuery({
-    name: 'page',
-    required: false,
-  })
-  // @ApiQuery({
-  //   name: 'secondCompanyId',
-  //   required: true,
-  // })
-  @ApiQuery({
-    name: 'orderBy',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'populate',
-    required: false,
-  })
-  @Get('/compare')
-  async test(@Query() query: { [key: string]: string }) {
-    const isValidId = this.helper.isValidUUID(query?.userId);
-    if (query.userId && !isValidId)
-      throw new BadRequestException({
-        message: ERROR_MESSAGES.INVALID_UUID,
-      });
-    const filter = pick(query, ['userId']);
-    const options = pick(query, ['page', 'limit', 'orderBy', 'populate']);
-    const data = await this.companyOnboardingService.findAll(filter, options);
-    return {
-      status: HttpStatus.OK,
-      message: SUCCESS_MESSAGES.RECORD_RETRIEVED,
-      data,
-    };
-  }
 
   @ApiOperation({
     summary:
@@ -189,64 +137,58 @@ export class CompanyOnboardingController {
   })
   @Roles('user')
   @UseGuards(JWTAuthGuard, RolesGuard)
-  // @ApiQuery({
-  //   name: 'firstCompanyId',
-  //   required: true,
-  // })
-  // @ApiQuery({
-  //   name: 'secondCompanyId',
-  //   required: true,
-  // })
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK,
     description: SUCCESS_MESSAGES.RECORD_UPDATED,
     type: CreateCompanyOnboardingResponse,
   })
-  @Get('/compare')
-  async compareTwoUsersCompany(@Query() query: { [key: string]: string }) {
-    console.log({ query });
-    let isValidId = this.helper.isValidUUID(query?.firstCompanyId);
+  @Get('/compare/:firstCompanyId/:secondCompanyId')
+  async compareTwoUsersCompany(
+    @Param('firstCompanyId') firstCompanyId: string,
+    @Param('secondCompanyId') secondCompanyId: string,
+  ) {
+    let isValidId = this.helper.isValidUUID(firstCompanyId);
     console.log({ isValidId });
-    if (query?.firstCompanyId && !isValidId)
+    if (firstCompanyId && !isValidId)
       throw new BadRequestException({
         message: ERROR_MESSAGES.INVALID_UUID,
       });
-    isValidId = this.helper.isValidUUID(query?.secondCompanyId);
-    if (query?.secondCompanyId && !isValidId)
+    isValidId = this.helper.isValidUUID(secondCompanyId);
+    if (secondCompanyId && !isValidId)
       throw new BadRequestException({
         message: ERROR_MESSAGES.INVALID_UUID,
       });
     const firstCompany = await this.companyOnboardingService.findOne(
-      query.firstCompanyId,
+      firstCompanyId,
     );
     if (!firstCompany)
       throw new NotFoundException({
         message: ERROR_MESSAGES.DATA_NOT_FOUND,
       });
     const secondCompany = await this.companyOnboardingService.findOne(
-      query.secondCompanyId,
+      secondCompanyId,
     );
     if (!secondCompany)
       throw new NotFoundException({
         message: ERROR_MESSAGES.DATA_NOT_FOUND,
       });
 
-    // compare the two companies
-    const firstCompanyPercentage = firstCompany.percentage;
-    const secondCompanyPercentage = secondCompany.percentage;
-    let message = '';
-    if (firstCompanyPercentage > secondCompanyPercentage) {
-      message = `${firstCompany.name} is better than ${secondCompany.name}`;
-    } else if (firstCompanyPercentage < secondCompanyPercentage) {
-      message = `${secondCompany.name} is better than ${firstCompany.name}`;
-    } else {
-      message = `${firstCompany.name} is same as ${secondCompany.name}`;
-    }
+    const message = `${firstCompany.name} has ${
+      firstCompany.usersCount > secondCompany.usersCount ? `more` : `less`
+    } users than ${secondCompany.name} and ${firstCompany.productsCount} ${
+      firstCompany.productsCount > secondCompany.productsCount ? `more` : `less`
+    } products than ${secondCompany.name} and ${firstCompany.percentage}% ${
+      firstCompany.percentage > secondCompany.percentage ? `more` : `less`
+    } than ${secondCompany.name}, below is the report`;
 
     return {
       status: HttpStatus.OK,
-      message,
+      report: message,
+      data: {
+        firstCompany: firstCompany,
+        secondCompany: secondCompany,
+      },
     };
   }
 
