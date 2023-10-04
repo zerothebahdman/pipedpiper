@@ -22,17 +22,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { SUCCESS_MESSAGES } from 'src/constant/success-message';
+import { SUCCESS_MESSAGES } from '../constant/success-message';
 import { CreateCompanyOnboardingResponse } from './dto/response/create-company-onboarding.response';
-import { ERROR_MESSAGES } from 'src/constant/error-message';
-import { HelperClass } from 'src/common/services/helper.service';
-import pick from 'src/utils/pick';
-import { JWTAuthGuard } from 'src/security/guards/jwt-auth.guard';
+import { ERROR_MESSAGES } from '../constant/error-message';
+import { HelperClass } from '../common/services/helper.service';
+import pick from '../utils/pick';
+import { JWTAuthGuard } from '../security/guards/jwt-auth.guard';
 import { UpdateCompanyOnboardingForm } from './dto/request/update-company-onboarding.request';
-import { Usr } from 'src/user/user.decorator';
-import { AuthUser } from 'src/auth/auth-user';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { RolesGuard } from 'src/common/guards/role.guard';
+import { Usr } from '../user/user.decorator';
+import { AuthUser } from '../auth/auth-user';
+import { Roles } from '../common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/role.guard';
 import { UploadCompanyLogoForm } from './dto/request/upload-company-logo.form';
 import { ImageService } from '../common/services/image.service';
 

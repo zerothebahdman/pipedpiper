@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateCompanyOnboardingRequest } from './dto/request/create-company-onboarding.request';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '../common/services/prisma.service';
 import { PaginationService } from '../common/services/paginate.service';
 import { Company } from '@prisma/client';
 import { UpdateCompanyOnboardingForm } from './dto/request/update-company-onboarding.request';

@@ -19,12 +19,12 @@ import {
   SignupRequest,
 } from './dtos';
 import { UserService } from '../user/user.service';
-import { HelperClass } from 'src/utils/helpers';
-import { EmailService } from 'src/mail-sender/mail-sender.service';
+import { HelperClass } from '../utils/helpers';
+import { EmailService } from '../mail-sender/mail-sender.service';
 import { AccountStatus } from '@prisma/client';
 import { UserAccountResponse } from './dtos/response/user.response.dto';
 import { Response } from 'express';
-import { SUCCESS_MESSAGES } from 'src/constant/success-message';
+import { SUCCESS_MESSAGES } from '../constant/success-message';
 
 @ApiTags('Authentication')
 @Controller('auth')
