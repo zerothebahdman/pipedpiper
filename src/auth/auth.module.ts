@@ -7,7 +7,7 @@ import { AuthController } from './auth.controller';
 import { MailSenderModule } from '../mail-sender/mail-sender.module';
 import { PrismaService } from '../common/services/prisma.service';
 import { HelperClass } from '../utils/helpers';
-import apiGatewayConfig from 'config/api-gateway.config';
+import apiGatewayConfig from '../../config/api-gateway.config';
 import { JwtStrategy } from '../security/jwt.strategy';
 
 @Module({
