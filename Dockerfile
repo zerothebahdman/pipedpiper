@@ -31,6 +31,7 @@ RUN yarn install
 COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
+COPY --from=development /usr/src/app/prisma ./prisma
 
 EXPOSE 8080
 
