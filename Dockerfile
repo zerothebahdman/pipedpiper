@@ -34,4 +34,4 @@ COPY --from=development /usr/src/app/dist ./dist
 
 EXPOSE 8080
 
-CMD [ "node", "dist/src/main.js" ]
+CMD [ "npm", "run", "start:migrate:prod" ]
